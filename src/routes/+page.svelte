@@ -6,6 +6,10 @@
 	import CardContent from '$lib/components/ui/CardContent.svelte';
 </script>
 
+<svelte:head>
+	<title>Veritas Civica - Modern Svelte Website</title>
+</svelte:head>
+
 <main class="container mx-auto py-10">
 	<div class="text-center mb-10">
 		<h1 class="text-4xl font-bold tracking-tight text-gray-900 mb-4">
