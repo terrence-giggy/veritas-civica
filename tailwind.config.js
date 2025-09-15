@@ -45,10 +45,6 @@ export default {
           DEFAULT: "hsl(var(--card))",
           foreground: "hsl(var(--card-foreground))",
         },
-        // Medium.com inspired text colors
-        'text-primary': "hsl(var(--text-primary))",
-        'text-secondary': "hsl(var(--text-secondary))",
-        'text-tertiary': "hsl(var(--text-tertiary))",
       },
       borderRadius: {
         lg: "var(--radius)",
