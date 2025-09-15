@@ -115,20 +115,44 @@
   }
   
   .prose h1 {
-    @apply text-4xl md:text-5xl lg:text-6xl;
+    font-size: 2.25rem; /* text-4xl */
     margin-bottom: 0.5em;
   }
   
+  @media (min-width: 768px) {
+    .prose h1 {
+      font-size: 3rem; /* md:text-5xl */
+    }
+  }
+  
+  @media (min-width: 1024px) {
+    .prose h1 {
+      font-size: 3.75rem; /* lg:text-6xl */
+    }
+  }
+  
   .prose h2 {
-    @apply text-2xl md:text-3xl;
+    font-size: 1.5rem; /* text-2xl */
     margin-top: 2em;
     margin-bottom: 0.75em;
   }
   
+  @media (min-width: 768px) {
+    .prose h2 {
+      font-size: 1.875rem; /* md:text-3xl */
+    }
+  }
+  
   .prose h3 {
-    @apply text-xl md:text-2xl;
+    font-size: 1.25rem; /* text-xl */
     margin-top: 1.5em;
     margin-bottom: 0.5em;
+  }
+  
+  @media (min-width: 768px) {
+    .prose h3 {
+      font-size: 1.5rem; /* md:text-2xl */
+    }
   }
   
   .prose p {
@@ -137,9 +161,15 @@
   }
   
   .prose .lead {
-    @apply text-lg md:text-xl;
+    font-size: 1.125rem; /* text-lg */
     color: hsl(var(--text-secondary));
     line-height: 1.6;
+  }
+  
+  @media (min-width: 768px) {
+    .prose .lead {
+      font-size: 1.25rem; /* md:text-xl */
+    }
   }
   
   /* Selection styling like Medium */
