@@ -1,6 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./src/**/*.{html,js,svelte,ts}'],
+  darkMode: 'class',
   theme: {
     container: {
       center: true,
@@ -49,6 +50,26 @@ export default {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",
         sm: "calc(var(--radius) - 4px)",
+      },
+      fontFamily: {
+        serif: "var(--font-serif)",
+        sans: "var(--font-sans)",
+      },
+      maxWidth: {
+        'content': 'var(--content-width)',
+        'prose': '65ch', // Optimal reading width in characters
+      },
+      lineHeight: {
+        'reading': 'var(--reading-line-height)',
+      },
+      typography: {
+        DEFAULT: {
+          css: {
+            maxWidth: 'var(--content-width)',
+            color: 'hsl(var(--text-primary))',
+            lineHeight: 'var(--reading-line-height)',
+          },
+        },
       },
     },
   },
