@@ -1,6 +1,7 @@
 import adapter from '@sveltejs/adapter-static';
 
 const dev = process.argv.includes('dev');
+const basePath = process.env.BASE_PATH;
 
 /** @type {import('@sveltejs/kit').Config} */
 const config = {
@@ -13,8 +14,14 @@ const config = {
 			strict: true
 		}),
 		paths: {
-			base: dev ? '' : process.env.BASE_PATH,
+			base: dev ? '' : basePath,
 			relative: false
+		},
+		prerender: {
+			// When using BASE_PATH, configure the origin properly
+			origin: basePath ? 'https://terrence-giggy.github.io' : undefined,
+			// Handle HTTP errors during prerendering
+			handleHttpError: 'warn'
 		}
 	}
 };
