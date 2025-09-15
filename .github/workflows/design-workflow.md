@@ -1,17 +1,17 @@
 # Site Design & UI Workflow
 
-This workflow provides specialized instructions for UI/UX improvements, component design, and visual updates to the Veritas Civica website.
+This workflow provides specialized instructions for UI/UX improvements, component design, and visual updates to the Veritas Civica website's Medium.com-inspired design system.
 
 ## When to Use This Workflow
 
 Use this workflow when the user requests:
-- Visual design improvements or styling changes
-- Component library enhancements or new components
-- UI/UX optimization or modernization
-- Color scheme, typography, or layout adjustments
-- Responsive design improvements
-- Accessibility enhancements for visual elements
-- Design system consistency improvements
+- Typography and reading experience improvements
+- Medium.com-inspired design enhancements
+- Dark mode and theme-related changes
+- Publishing platform UI/UX optimization
+- Component library enhancements focused on content presentation
+- Accessibility enhancements for reading experiences
+- Design system consistency improvements for typography-focused layouts
 
 ## Multi-Step Design Process
 
@@ -30,25 +30,28 @@ ls -la src/lib/components/ui/
 - Identify component variants and their implementations
 
 #### Step 1.3: Analyze Current Design System
-- Review `tailwind.config.js` for custom design tokens
-- Examine `src/app.css` for global styles
-- Check `src/routes/+page.svelte` for current layout and component usage
-- Document current color scheme, typography, and spacing
+- Review `tailwind.config.js` for Medium.com-inspired design tokens
+- Examine `src/app.css` for typography and theming CSS custom properties
+- Check `src/routes/+page.svelte` for current Medium-inspired layout and content structure
+- Analyze Typography and Article components for reading experience optimization
+- Document current serif typography, color hierarchy, and dark mode implementation
 
 #### Step 1.4: Assessment Output
 Create a brief summary covering:
-- Current component inventory
-- Design patterns in use
-- Styling approach (Tailwind classes, custom CSS)
-- Areas for improvement or gaps identified
+- Current component inventory (Typography, Article, ThemeToggle, etc.)
+- Medium.com-inspired design patterns in use
+- Typography-focused styling approach (serif fonts, optimal line heights)
+- Dark mode implementation and theming system
+- Areas for improvement or gaps in reading experience
 
 ### Phase 2: Research High-Quality Solutions
 
 #### Step 2.1: Design System Research
-- Identify modern design trends relevant to the project type
-- Research best practices for the specific component or design element
-- Consider accessibility standards (WCAG guidelines)
-- Look for inspiration from established design systems (Material Design, Ant Design, etc.)
+- Research Medium.com's typography and reading experience best practices
+- Identify modern publishing platform design trends and patterns
+- Research accessibility standards for long-form content (WCAG guidelines)
+- Look for inspiration from editorial and publishing design systems
+- Study dark mode implementations in content-focused applications
 
 #### Step 2.2: Technical Implementation Research
 - Research Shadcn Svelte component best practices
@@ -75,26 +78,29 @@ Document your research findings:
 Execute changes in this order:
 
 1. **Update design tokens** (if needed)
-   - Modify `tailwind.config.js` for new colors, spacing, typography
-   - Update CSS custom properties in `src/app.css`
+   - Modify `tailwind.config.js` for typography-focused design tokens
+   - Update CSS custom properties in `src/app.css` for theming and typography
+   - Ensure proper serif font definitions and reading-optimized line heights
 
 2. **Update or create components**
-   - Modify existing components in `src/lib/components/ui/`
-   - Create new components following Shadcn Svelte patterns
-   - Ensure proper TypeScript types and props
+   - Modify Typography component for better hierarchical text rendering
+   - Enhance Article component for optimal long-form content presentation
+   - Update ThemeToggle for seamless light/dark mode transitions
+   - Create new components following Medium.com-inspired patterns
 
 3. **Update page layouts and content**
-   - Apply new components in `src/routes/+page.svelte`
-   - Update `src/routes/+layout.svelte` if needed
-   - Ensure responsive behavior across all viewports
+   - Apply typography components in `src/routes/+page.svelte`
+   - Update `src/routes/+layout.svelte` for theme management
+   - Ensure content hierarchy follows publishing platform best practices
 
 #### Step 3.3: Validation & Testing
 After each implementation step:
 
 1. **Build validation**: Run `npm run build` - ensure no errors
 2. **Visual validation**: Run `npm run dev` and check design in browser
-3. **Responsive testing**: Test on multiple screen sizes
-4. **Accessibility testing**: Check keyboard navigation and screen reader compatibility
+3. **Reading experience testing**: Test typography hierarchy and content readability
+4. **Dark mode testing**: Verify theme toggle functionality and color transitions
+5. **Accessibility testing**: Check keyboard navigation, screen reader compatibility, and color contrast
 5. **Cross-browser testing**: Verify appearance in different browsers
 
 #### Step 3.4: Documentation
@@ -103,6 +109,40 @@ After each implementation step:
 - Note accessibility improvements made
 
 ## Key Technical Patterns
+
+### Typography Component Usage
+```svelte
+<!-- Medium.com-inspired Typography component -->
+<script>
+  import Typography from '$lib/components/ui/Typography.svelte';
+</script>
+
+<!-- Hierarchical headings -->
+<Typography as="h1" variant="h1">Main Heading</Typography>
+<Typography as="h2" variant="h2">Section Heading</Typography>
+
+<!-- Body text optimized for reading -->
+<Typography as="p" variant="body">
+  Serif body text with optimal line height and spacing for reading comfort.
+</Typography>
+
+<!-- Lead text for article introductions -->
+<Typography as="p" variant="lead">
+  Larger introductory text that draws readers into the content.
+</Typography>
+```
+
+### Theme Toggle Implementation
+```svelte
+<!-- ThemeToggle component with CSS custom properties -->
+<script>
+  import ThemeToggle from '$lib/components/ui/ThemeToggle.svelte';
+</script>
+
+<ThemeToggle />
+
+<!-- CSS custom properties in app.css enable smooth theme transitions -->
+```
 
 ### Component Creation
 ```svelte
@@ -142,24 +182,51 @@ After each implementation step:
 </button>
 ```
 
-### Design Token Updates
+### Design Token Updates for Typography & Theming
 ```js
-// tailwind.config.js
+// tailwind.config.js - Medium.com-inspired design tokens
 export default {
   theme: {
     extend: {
-      colors: {
-        primary: {
-          50: '#...',
-          500: '#...',
-          950: '#...'
-        }
-      },
       fontFamily: {
-        sans: ['Inter', 'system-ui', 'sans-serif']
+        serif: "var(--font-serif)", // Charter, Georgia for content
+        sans: "var(--font-sans)"    // System fonts for UI
+      },
+      maxWidth: {
+        'content': 'var(--content-width)', // 728px - Medium's article width
+        'prose': '65ch' // Optimal reading width
+      },
+      lineHeight: {
+        'reading': 'var(--reading-line-height)' // 1.58 - Medium's line height
+      },
+      colors: {
+        // CSS custom properties for theme switching
+        primary: "hsl(var(--primary))", // Medium green
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))"
       }
     }
   }
+}
+```
+
+```css
+/* src/app.css - CSS custom properties for theming */
+:root {
+  --font-serif: charter, Georgia, Cambria, serif;
+  --content-width: 728px;
+  --reading-line-height: 1.58;
+  
+  /* Light mode colors */
+  --primary: 142 70% 31%; /* Medium green */
+  --background: 0 0% 100%;
+  --text-primary: 0 0% 13%;
+}
+
+.dark {
+  /* Dark mode colors */
+  --background: 0 0% 7%;
+  --text-primary: 0 0% 95%;
 }
 ```
 
@@ -168,11 +235,12 @@ export default {
 Before completing design work, verify:
 
 ### Visual Quality
-- [ ] Consistent spacing and alignment
+- [ ] Typography hierarchy follows Medium.com's principles
+- [ ] Serif fonts applied correctly for content readability
 - [ ] Appropriate color contrast ratios (4.5:1 minimum)
-- [ ] Readable typography hierarchy
-- [ ] Proper focus states for interactive elements
-- [ ] Smooth hover/transition effects
+- [ ] Optimal line lengths (65-75 characters) maintained
+- [ ] Smooth theme transitions between light and dark modes
+- [ ] Consistent spacing following Medium.com's generous white space principles
 
 ### Responsive Design
 - [ ] Mobile-first design principles applied
@@ -187,36 +255,37 @@ Before completing design work, verify:
 - [ ] Sufficient color contrast maintained
 
 ### Technical Implementation
-- [ ] Components follow Shadcn Svelte patterns
-- [ ] Proper TypeScript types defined
-- [ ] CSS classes use Tailwind utilities when possible
+- [ ] Typography and Article components follow Medium.com-inspired patterns
+- [ ] CSS custom properties used for robust theming
+- [ ] Theme toggle works seamlessly between light and dark modes
+- [ ] Proper TypeScript types defined for all components
 - [ ] No console errors in browser dev tools
 - [ ] Build completes successfully
 
 ## Common Design Tasks
 
-### Adding New Component Variants
-1. Define new variants in `cva` configuration
-2. Add corresponding Tailwind classes
-3. Test all variant combinations
-4. Update TypeScript types if needed
+### Typography Improvements
+1. Analyze current Typography component hierarchy
+2. Optimize font sizes and line heights for readability
+3. Ensure serif fonts are properly applied to content
+4. Test reading experience across different screen sizes
 
-### Updating Color Schemes
-1. Update `tailwind.config.js` color palette
-2. Test contrast ratios for accessibility
-3. Update components using the colors
-4. Verify dark mode compatibility (if applicable)
+### Dark Mode Enhancements
+1. Update CSS custom properties in `src/app.css`
+2. Test color contrast ratios for accessibility
+3. Verify ThemeToggle component functionality
+4. Ensure smooth transitions between themes
 
-### Layout Improvements
-1. Analyze current layout structure
-2. Plan responsive breakpoint behavior
-3. Implement using CSS Grid or Flexbox via Tailwind
-4. Test across all screen sizes
+### Layout Improvements for Reading Experience
+1. Optimize content width (following Medium's 728px standard)
+2. Implement proper content hierarchy with Typography component
+3. Use Article component for long-form content presentation
+4. Test responsive behavior for reading comfort
 
 ### Typography Updates
-1. Choose web-safe font stack or web fonts
+1. Choose appropriate serif fonts for content (currently Charter, Georgia)
 2. Update `tailwind.config.js` font configuration
-3. Define clear hierarchy (h1-h6, body, captions)
-4. Ensure readability and accessibility
+3. Define clear hierarchy using Typography component variants
+4. Ensure optimal line heights and character limits for reading
 
-Remember: Always prioritize user experience and accessibility over visual trends. Every design decision should improve usability and make the site more inclusive.
+Remember: Always prioritize reading experience and accessibility. Every design decision should improve content consumption and make the platform more inclusive, following Medium.com's focus on quality typography and user-centered design.
