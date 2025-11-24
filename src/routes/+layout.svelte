@@ -11,7 +11,7 @@
 	<meta name="description" content="Veritas Civica - A modern, typography-focused publishing platform" />
 </svelte:head>
 
-<div class="min-h-screen bg-background">
+<div class="min-h-screen" style="background-color: hsl(var(--background))">
 	<Navigation />
 	<main>
 		{@render children?.()}

@@ -45,10 +45,10 @@
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
-					<Typography as="p" variant="body" class="text-text-secondary line-clamp-3 mb-4">
+					<Typography as="p" variant="body" class="line-clamp-3 mb-4" style="color: hsl(var(--text-secondary))">
 						Exploring how modern web technologies are reshaping the way we read and write online, with a focus on accessibility and readability.
 					</Typography>
-					<div class="flex items-center gap-3 text-sm text-text-tertiary">
+					<div class="flex items-center gap-3 text-sm" style="color: hsl(var(--text-tertiary))">
 						<span>Jane Smith</span>
 						<span>·</span>
 						<span>5 min read</span>
@@ -66,10 +66,10 @@
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
-					<Typography as="p" variant="body" class="text-text-secondary line-clamp-3 mb-4">
+					<Typography as="p" variant="body" class="line-clamp-3 mb-4" style="color: hsl(var(--text-secondary))">
 						A comprehensive guide to creating inclusive user interfaces that work for everyone, following WCAG guidelines and best practices.
 					</Typography>
-					<div class="flex items-center gap-3 text-sm text-text-tertiary">
+					<div class="flex items-center gap-3 text-sm" style="color: hsl(var(--text-tertiary))">
 						<span>Alex Johnson</span>
 						<span>·</span>
 						<span>7 min read</span>
@@ -87,10 +87,10 @@
 					</CardTitle>
 				</CardHeader>
 				<CardContent>
-					<Typography as="p" variant="body" class="text-text-secondary line-clamp-3 mb-4">
+					<Typography as="p" variant="body" class="line-clamp-3 mb-4" style="color: hsl(var(--text-secondary))">
 						Why less is more in modern web design, and how to create beautiful, functional interfaces with minimal visual clutter.
 					</Typography>
-					<div class="flex items-center gap-3 text-sm text-text-tertiary">
+					<div class="flex items-center gap-3 text-sm" style="color: hsl(var(--text-tertiary))">
 						<span>Maria Garcia</span>
 						<span>·</span>
 						<span>4 min read</span>
@@ -184,7 +184,7 @@
 </section>
 
 <!-- Footer -->
-<footer class="py-12 border-t border-border">
+<footer class="py-12 border-t">
 	<div class="max-w-content mx-auto px-6 text-center">
 		<Typography as="p" variant="caption" class="!mb-0">
 			Built with ❤️ using SvelteKit, Tailwind CSS, and Shadcn Svelte components

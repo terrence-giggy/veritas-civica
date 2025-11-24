@@ -29,7 +29,7 @@
 			{/if}
 			
 			{#if author || publishDate || readTime}
-				<div class="flex items-center gap-4 text-text-secondary font-sans text-sm border-b border-border pb-6">
+				<div class="flex items-center gap-4 font-sans text-sm border-b pb-6" style="color: hsl(var(--text-secondary)); border-color: hsl(var(--border))">
 					{#if author}
 						<div class="flex items-center gap-2">
 							<div class="w-8 h-8 rounded-full bg-muted flex items-center justify-center">
@@ -40,12 +40,12 @@
 					{/if}
 					
 					{#if publishDate}
-						<span class="text-text-tertiary">·</span>
+						<span style="color: hsl(var(--text-tertiary))">·</span>
 						<time>{publishDate}</time>
 					{/if}
 					
 					{#if readTime}
-						<span class="text-text-tertiary">·</span>
+						<span style="color: hsl(var(--text-tertiary))">·</span>
 						<span>{readTime} min read</span>
 					{/if}
 				</div>
@@ -59,19 +59,19 @@
 	</div>
 	
 	<!-- Article Footer / Engagement -->
-	<footer class="mt-12 pt-8 border-t border-border">
+	<footer class="mt-12 pt-8 border-t" style="border-color: hsl(var(--border))">
 		<div class="flex items-center justify-between">
 			<div class="flex items-center gap-4">
 				<!-- Clap/Like button placeholder -->
 				<button class="flex items-center gap-2 px-3 py-2 rounded-full bg-muted hover:bg-accent transition-colors">
 					<span class="text-sm">👏</span>
-					<span class="text-sm font-medium text-text-secondary">0</span>
+					<span class="text-sm font-medium" style="color: hsl(var(--text-secondary))">0</span>
 				</button>
 				
 				<!-- Comment button placeholder -->
 				<button class="flex items-center gap-2 px-3 py-2 rounded-full hover:bg-muted transition-colors">
 					<span class="text-sm">💬</span>
-					<span class="text-sm text-text-secondary">Comment</span>
+					<span class="text-sm" style="color: hsl(var(--text-secondary))">Comment</span>
 				</button>
 			</div>
 			

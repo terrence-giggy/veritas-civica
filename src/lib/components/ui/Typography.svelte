@@ -11,14 +11,25 @@
 	} = $props();
 
 	const variants = {
-		h1: 'text-4xl md:text-5xl lg:text-6xl font-bold font-serif leading-tight tracking-tight text-text-primary mb-6',
-		h2: 'text-2xl md:text-3xl font-bold font-serif leading-tight tracking-tight text-text-primary mt-8 mb-4',
-		h3: 'text-xl md:text-2xl font-semibold font-serif leading-tight tracking-tight text-text-primary mt-6 mb-3',
-		h4: 'text-lg md:text-xl font-semibold font-serif leading-tight text-text-primary mt-4 mb-2',
-		body: 'text-base md:text-lg font-serif leading-reading text-text-primary mb-6',
-		lead: 'text-lg md:text-xl font-serif leading-reading text-text-secondary mb-6',
-		caption: 'text-sm font-sans text-text-tertiary',
-		label: 'text-sm font-medium font-sans text-text-primary',
+		h1: 'text-4xl md:text-5xl lg:text-6xl font-bold font-serif leading-tight tracking-tight mb-6',
+		h2: 'text-2xl md:text-3xl font-bold font-serif leading-tight tracking-tight mt-8 mb-4',
+		h3: 'text-xl md:text-2xl font-semibold font-serif leading-tight tracking-tight mt-6 mb-3',
+		h4: 'text-lg md:text-xl font-semibold font-serif leading-tight mt-4 mb-2',
+		body: 'text-base md:text-lg font-serif leading-reading mb-6',
+		lead: 'text-lg md:text-xl font-serif leading-reading mb-6',
+		caption: 'text-sm font-sans',
+		label: 'text-sm font-medium font-sans',
+	};
+
+	const colorStyles = {
+		h1: 'color: hsl(var(--text-primary))',
+		h2: 'color: hsl(var(--text-primary))',
+		h3: 'color: hsl(var(--text-primary))',
+		h4: 'color: hsl(var(--text-primary))',
+		body: 'color: hsl(var(--text-primary))',
+		lead: 'color: hsl(var(--text-secondary))',
+		caption: 'color: hsl(var(--text-tertiary))',
+		label: 'color: hsl(var(--text-primary))',
 	};
 
 	const sizes = {
@@ -37,6 +48,7 @@
 		'mx-auto', // Center content
 		className
 	)}
+	style={colorStyles[variant]}
 	{...restProps}
 >
 	{@render children?.()}
