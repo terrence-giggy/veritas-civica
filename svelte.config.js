@@ -21,7 +21,9 @@ const config = {
 			// When using BASE_PATH, configure the origin properly
 			origin: basePath ? 'https://terrence-giggy.github.io' : undefined,
 			// Handle HTTP errors during prerendering
-			handleHttpError: 'warn'
+			handleHttpError: 'warn',
+			// Handle routes that weren't found during crawling (dynamic [slug] routes with no content)
+			handleUnseenRoutes: 'ignore'
 		}
 	}
 };
