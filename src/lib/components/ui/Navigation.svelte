@@ -17,10 +17,20 @@
 	<div class="max-w-6xl mx-auto px-6">
 		<div class="flex items-center justify-between h-16">
 			<!-- Logo / Brand -->
-			<div class="flex items-center">
+			<div class="flex items-center gap-8">
 				<a href="/" class="text-xl font-bold font-serif hover:text-primary transition-colors" style="color: hsl(var(--text-primary))">
 					Veritas Civica
 				</a>
+				
+				<!-- Main Navigation Links -->
+				<div class="hidden md:flex items-center gap-6">
+					<a href="/people" class="text-sm font-medium hover:text-primary transition-colors" style="color: hsl(var(--text-secondary))">
+						People
+					</a>
+					<a href="/organizations" class="text-sm font-medium hover:text-primary transition-colors" style="color: hsl(var(--text-secondary))">
+						Organizations
+					</a>
+				</div>
 			</div>
 			
 			<!-- Center - Search (hidden on mobile) -->
