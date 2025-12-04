@@ -83,7 +83,7 @@ jobs:
         if: steps.sync.outputs.has_changes == 'true'
         uses: peter-evans/create-pull-request@v6
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.CONTENT_SYNC_TOKEN || secrets.GITHUB_TOKEN }}
           commit-message: ${{ steps.sync.outputs.commit_message }}
           branch: ${{ steps.sync.outputs.pr_branch }}
           delete-branch: true
@@ -94,5 +94,5 @@ jobs:
       - name: Enable auto-merge
         if: steps.sync.outputs.has_changes == 'true'
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.CONTENT_SYNC_TOKEN || secrets.GITHUB_TOKEN }}
         run: gh pr merge ${{ steps.sync.outputs.pr_branch }} --auto --squash
