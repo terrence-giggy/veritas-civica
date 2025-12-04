@@ -1,5 +1,41 @@
 {
   "version": 1,
-  "sources": {},
-  "lastFullSync": null
+  "sources": {
+    "speculum-principum": {
+      "lastSync": "2025-12-04T04:45:58.080Z",
+      "checksums": {
+        "william-fowler": "511a6b11661e2916d80391850dd931e658b71b69fc927417bf1b91c403099a04",
+        "scipio": "e5cc6cc9ad34e4ad286beb4a35420ac2255a9c1a99abfd8332b755676e6a8974",
+        "pope-leo-x": "16c43e3d38b32088cfa4e3e868c7bdd693fb6beab8fc990ea83fa7e9e043395f",
+        "pope-julius-ii": "1595a963525172f43c2bffa91209885e4cc9679551c0138eccad6a0b76ca06a7",
+        "pope-julius": "49b9472a662495f029a149c807b46170e8efa06bba6c1456d6b02ab8adae1d0a",
+        "pope-alexander": "8cc6c474edec60ba2372cae143beb8e99630511ab5367a8a74ff155dd6268cb4",
+        "pasquale-villari": "067359c4c2f57819461460ac216bbc6457130aba3080bbfe881cab5937ffe76e",
+        "oliverotto-da-fermo": "ca91a40d8603bc386db31738adcd351acaf2fe683556e0c5a2c72810cb6a10d0",
+        "niccolo-machiavelli": "d4a86cb00a1886c80fb08566759cf06444dcfc9d7b64de4a9e45b8e48fb40fae",
+        "mario-praz": "9e51eff32de7d1f772fbdf24a45b886b3967c308fd94568928a7cfb6e8d84450",
+        "luigi-ricci": "8b1baa1afb232ebbc327f2fd3f5333b0d97ca2be2db33462b41653b5694cbf07",
+        "louis-xii": "85baae38a3879f45845588cb0d98690852eb55e5b1cf21ababfc58967663db53",
+        "lorenzo-de-medici": "040a7da0bf25ebc091879d8d82f7de4decd1c6ce4371a713ceba65d0a6a02bc8",
+        "l-a-burd": "e5945843bd4114bf15ab92f9909d7bd4a7ac8d6053dc1b287dee8190444164d6",
+        "king-ferrando": "cf424e46b10946625b4ba855a090cac8b4f519c05f28a5d273afd22e51cdd616",
+        "innocent-gentillet": "4062fd20f8bdca68fb405654882e2473378fc7270195866b2b3149de49710b26",
+        "hiero-of-syracuse": "b7b736379bff9897df836599d06cac15db8158958e7864f54b6f657f65719048",
+        "hannibal": "a0037e4323152d777c8a4a92a71c7a5ae1c25dfdf53f15851fc60e94e11c5643",
+        "francesco-sforza": "063a275307f33c7de9fd6015b0116032a87cc567bbf9a92250696604426f94ad",
+        "fabius-maximus": "eaf0c11b87f976c95733889512542a39ca2a5b855b38faf44b51600ee4bc7f42",
+        "edward-meyer": "86ba5e9f88c56990149b6075bf2baa6e32bd6d1965879416869fb74132845cdb",
+        "edward-dacres": "658af0e013e299259daab54de541409285156b1f727f8862f17e288dbc70f277",
+        "e-r-p-vincent": "d3c93c87446a14d38e17ced831f7998ea789e6d8734b0b6295d298e632bf6493",
+        "duke-ludovico": "2fe26b2b36dd16b44fed6cc93d026ffec9499713e00223f7f9cf3fc01f994a80",
+        "charles-vii": "84720e959c07b3eacde612a9b5283c99d331e30b65229c66c7f256f519c3a66d",
+        "cesare-borgia": "1076b0e4e65b7152ec83b4b40e7335bfc0362313bf921ff70a3a6e94ac495668",
+        "annibale-bentivogli": "a9f963126b8cf2a7a65e7db44c255b3f08116fffeedb18c7ad99a74c40c0e1cf",
+        "alexander-vi": "a9006619f4c0a5a50c5fd78b2239c61f1a6f31033e2063022033c4f6be5ef048",
+        "agathocles": "959110c069a7a3dc837e65e712f9607432280dcdddfadf8c793d0282f744dc78"
+      },
+      "lastSyncCount": 29
+    }
+  },
+  "lastFullSync": "2025-12-04T04:45:58.081Z"
 }
