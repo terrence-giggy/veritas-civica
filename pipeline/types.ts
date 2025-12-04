@@ -1,5 +1,5 @@
 /**
- * Content Retrieval System - Type Definitions
+ * Content Pipeline - Type Definitions
  * 
  * Core TypeScript interfaces for the content retrieval and storage system.
  */

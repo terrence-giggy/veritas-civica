@@ -12,11 +12,10 @@
     "test:ui": "playwright test --ui",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
-    "test:content": "vitest run tests/lib/content",
-    "test:integrations": "vitest run tests/lib/integrations",
-    "sync": "tsx scripts/sync-content.ts sync",
-    "sync:dry": "tsx scripts/sync-content.ts sync --dry-run",
-    "sync:help": "tsx scripts/sync-content.ts --help"
+    "test:pipeline": "vitest run tests/pipeline",
+    "sync": "tsx pipeline/cli.ts sync",
+    "sync:dry": "tsx pipeline/cli.ts sync --dry-run",
+    "sync:help": "tsx pipeline/cli.ts --help"
   },
   "devDependencies": {
     "@playwright/test": "^1.55.0",

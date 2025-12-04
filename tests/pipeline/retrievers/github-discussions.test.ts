@@ -2,7 +2,6 @@
  * GitHub Discussions Retriever Tests
  * 
  * Unit tests for the GitHub Discussions content retriever.
- * NOTE: These tests now use the pipeline module.
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
@@ -13,8 +12,8 @@ import {
   getRetrieverByType,
   getAvailableRetrieverTypes,
   GitHubDiscussionsRetriever,
-} from '../../../../pipeline/retrievers/index.js';
-import type { SourceConfig, TopicConfig } from '../../../../pipeline/types.js';
+} from '../../../pipeline/retrievers/index.js';
+import type { SourceConfig, TopicConfig } from '../../../pipeline/types.js';
 
 // =============================================================================
 // Slug Generation Tests

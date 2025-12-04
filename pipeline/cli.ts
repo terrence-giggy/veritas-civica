@@ -5,7 +5,7 @@
  * Command-line interface for syncing content from external sources.
  * 
  * Usage:
- *   npx tsx scripts/sync-content.ts [command] [options]
+ *   npx tsx pipeline/cli.ts [command] [options]
  * 
  * Commands:
  *   sync          Sync content from configured sources
@@ -27,9 +27,9 @@ import {
   type SourceConfig,
   type SyncResult,
   type RawContent,
-} from '../src/lib/content/index.js';
-import { ContentStorage } from '../src/lib/content/storage.js';
-import { hasToken } from '../src/lib/integrations/github/index.js';
+} from './index.js';
+import { ContentStorage } from './storage/storage.js';
+import { hasToken } from './integrations/github/index.js';
 
 // =============================================================================
 // CLI Argument Parsing
@@ -126,10 +126,10 @@ function formatDuration(ms: number): string {
 
 function showHelp(): void {
   console.log(`
-${colors.bold}Content Sync CLI${colors.reset} - Veritas Civica Content Retrieval System
+${colors.bold}Content Sync CLI${colors.reset} - Veritas Civica Content Pipeline
 
 ${colors.bold}Usage:${colors.reset}
-  npx tsx scripts/sync-content.ts [command] [options]
+  npx tsx pipeline/cli.ts [command] [options]
 
 ${colors.bold}Commands:${colors.reset}
   sync              Sync content from configured sources
@@ -145,12 +145,12 @@ ${colors.bold}Options:${colors.reset}
   --topic TOPIC     Sync specific topic (People, Organizations)
 
 ${colors.bold}Examples:${colors.reset}
-  npx tsx scripts/sync-content.ts sync
-  npx tsx scripts/sync-content.ts sync --dry-run
-  npx tsx scripts/sync-content.ts sync --source speculum-principum
-  npx tsx scripts/sync-content.ts sync --topic People
-  npx tsx scripts/sync-content.ts list-sources
-  npx tsx scripts/sync-content.ts show people niccolo-machiavelli
+  npx tsx pipeline/cli.ts sync
+  npx tsx pipeline/cli.ts sync --dry-run
+  npx tsx pipeline/cli.ts sync --source speculum-principum
+  npx tsx pipeline/cli.ts sync --topic People
+  npx tsx pipeline/cli.ts list-sources
+  npx tsx pipeline/cli.ts show people niccolo-machiavelli
 
 ${colors.bold}Environment:${colors.reset}
   GITHUB_TOKEN or GH_TOKEN must be set for GitHub sources.
@@ -384,8 +384,8 @@ async function show(args: CliArgs): Promise<void> {
   
   if (!category || !slug) {
     error('show command requires <category> and <slug> arguments');
-    log('\nUsage: npx tsx scripts/sync-content.ts show <category> <slug>');
-    log('Example: npx tsx scripts/sync-content.ts show people niccolo-machiavelli');
+    log('\nUsage: npx tsx pipeline/cli.ts show <category> <slug>');
+    log('Example: npx tsx pipeline/cli.ts show people niccolo-machiavelli');
     process.exit(1);
   }
 

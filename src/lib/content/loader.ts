@@ -3,11 +3,14 @@
  * 
  * Utilities for loading synced content at build time.
  * Used in +page.server.ts files for static generation.
+ * 
+ * This module provides the bridge between the pipeline's content storage
+ * and SvelteKit's static page generation.
  */
 
 import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
-import type { RawContent } from './types.js';
+import type { RawContent } from '../../../pipeline/types.js';
 
 // =============================================================================
 // Constants

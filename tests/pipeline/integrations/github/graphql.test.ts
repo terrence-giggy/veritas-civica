@@ -2,7 +2,6 @@
  * GitHub GraphQL Client Tests
  * 
  * Unit tests for the GitHub GraphQL API client using mocked fetch responses.
- * NOTE: These tests now use the pipeline module.
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';

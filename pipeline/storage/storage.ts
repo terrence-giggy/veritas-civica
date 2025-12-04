@@ -6,7 +6,7 @@
 
 import { readFile, writeFile, readdir, mkdir, access } from 'node:fs/promises';
 import { join, dirname } from 'node:path';
-import type { RawContent, SyncState, SourceSyncState, SyncItemResult } from './types.js';
+import type { RawContent, SyncState, SourceSyncState, SyncItemResult } from '../types.js';
 
 // =============================================================================
 // Constants

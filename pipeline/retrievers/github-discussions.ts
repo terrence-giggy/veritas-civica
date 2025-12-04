@@ -13,7 +13,7 @@ import {
   hasToken,
   type Discussion,
   type DiscussionCategory,
-} from '../../integrations/github/index.js';
+} from '../integrations/github/index.js';
 
 /**
  * Retriever for GitHub Discussions content

@@ -2,7 +2,6 @@
  * Content Storage Tests
  * 
  * Unit tests for the content storage handler.
- * NOTE: These tests now use the pipeline module.
  */
 
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';

@@ -1,5 +1,5 @@
 /**
- * Content Retrieval System - Source Configuration
+ * Content Pipeline - Source Configuration
  * 
  * Defines content sources and provides helper functions for accessing them.
  */
