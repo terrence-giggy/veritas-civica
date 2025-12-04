@@ -53,3 +53,19 @@ export {
 
 // GitHub integration exports
 export { hasToken } from './integrations/github/index.js';
+
+// CI utilities exports
+export {
+  isCI,
+  isGitHubActions,
+  writeGitHubOutput,
+  writeGitHubSummary,
+  configureGit,
+  stageContent,
+  hasChanges,
+  getChangesSummary,
+  getCIContext,
+  generatePRMetadata,
+  generateSummary,
+} from './ci/index.js';
+export type { PRMetadata, CIContext, SummaryOptions } from './ci/index.js';

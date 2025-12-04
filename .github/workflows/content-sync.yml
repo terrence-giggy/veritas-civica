@@ -1,5 +1,5 @@
 # Content Sync Workflow
-# Retrieves content from GitHub Discussions and commits to repository
+# Retrieves content from GitHub Discussions and creates a PR with changes
 #
 # Triggers:
 # - Manual: workflow_dispatch with optional source/topic selection
@@ -7,12 +7,14 @@
 #
 # Required Secrets:
 # - CONTENT_SYNC_TOKEN: GitHub PAT with repo scope for reading discussions
-#   (Uses default GITHUB_TOKEN for committing changes)
+#   (Uses default GITHUB_TOKEN for creating PRs)
+#
+# Note: Creates a pull request instead of pushing directly to main
+# to comply with branch protection rules.
 
 name: Sync Content
 
 on:
-  # Manual trigger with options
   workflow_dispatch:
     inputs:
       source:
@@ -35,12 +37,12 @@ on:
         default: false
         type: boolean
 
-  # Scheduled sync - daily at 6:00 AM UTC
-  schedule:
-    - cron: '0 6 * * *'
+  # schedule:
+  #   - cron: '0 6 * * *'
 
 permissions:
   contents: write
+  pull-requests: write
 
 env:
   NODE_VERSION: '20'
@@ -54,7 +56,6 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # Fetch full history for proper git operations
           fetch-depth: 0
 
       - name: Setup Node.js
@@ -66,124 +67,32 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Build sync script dependencies
-        run: |
-          # Ensure TypeScript is compiled if needed
-          echo "Dependencies installed, ready to sync"
-
       - name: Run content sync
         id: sync
         env:
-          # Use CONTENT_SYNC_TOKEN for reading external repos
-          # Falls back to GITHUB_TOKEN for same-repo access
           GITHUB_TOKEN: ${{ secrets.CONTENT_SYNC_TOKEN || secrets.GITHUB_TOKEN }}
           GH_TOKEN: ${{ secrets.CONTENT_SYNC_TOKEN || secrets.GITHUB_TOKEN }}
         run: |
-          # Build sync command with options
-          SYNC_CMD="npx tsx scripts/sync-content.ts sync"
-          
-          # Add source filter if specified
-          if [ -n "${{ inputs.source }}" ]; then
-            SYNC_CMD="$SYNC_CMD --source ${{ inputs.source }}"
-          fi
-          
-          # Add topic filter if specified
-          if [ -n "${{ inputs.topic }}" ]; then
-            SYNC_CMD="$SYNC_CMD --topic ${{ inputs.topic }}"
-          fi
-          
-          # Add dry-run flag if specified
-          if [ "${{ inputs.dry_run }}" = "true" ]; then
-            SYNC_CMD="$SYNC_CMD --dry-run"
-          fi
-          
-          # Add verbose flag for CI logs
-          SYNC_CMD="$SYNC_CMD --verbose"
-          
-          echo "Running: $SYNC_CMD"
-          $SYNC_CMD
-          
-          # Check if there are any changes
-          if git diff --quiet content/; then
-            echo "has_changes=false" >> $GITHUB_OUTPUT
-            echo "No content changes detected"
-          else
-            echo "has_changes=true" >> $GITHUB_OUTPUT
-            echo "Content changes detected"
-            git diff --stat content/
-          fi
+          npx tsx pipeline/cli.ts ci-sync \
+            ${{ inputs.source && format('--source {0}', inputs.source) || '' }} \
+            ${{ inputs.topic && format('--topic {0}', inputs.topic) || '' }} \
+            ${{ inputs.dry_run == true && '--dry-run' || '' }} \
+            --verbose
 
-      - name: Commit content changes
-        if: steps.sync.outputs.has_changes == 'true' && inputs.dry_run != true
-        run: |
-          # Configure git
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Stage content changes
-          git add content/
-          
-          # Create commit message with timestamp
-          TIMESTAMP=$(date -u +"%Y-%m-%d %H:%M UTC")
-          
-          # Build commit message
-          COMMIT_MSG="chore: sync content from discussions"
-          
-          if [ -n "${{ inputs.source }}" ]; then
-            COMMIT_MSG="$COMMIT_MSG (source: ${{ inputs.source }})"
-          fi
-          
-          if [ -n "${{ inputs.topic }}" ]; then
-            COMMIT_MSG="$COMMIT_MSG (topic: ${{ inputs.topic }})"
-          fi
-          
-          COMMIT_MSG="$COMMIT_MSG
-
-          Automated content sync at $TIMESTAMP
-          
-          Triggered by: ${{ github.event_name }}
-          Run: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
-          
-          git commit -m "$COMMIT_MSG"
-
-      - name: Push changes
-        if: steps.sync.outputs.has_changes == 'true' && inputs.dry_run != true
-        run: |
-          git push origin ${{ github.ref_name }}
-
-      - name: Trigger deploy (optional)
-        if: steps.sync.outputs.has_changes == 'true' && inputs.dry_run != true && github.ref_name == 'main'
-        uses: actions/github-script@v7
+      - name: Create Pull Request
+        if: steps.sync.outputs.has_changes == 'true'
+        uses: peter-evans/create-pull-request@v6
         with:
-          script: |
-            // Optionally trigger deploy workflow after content sync
-            // Uncomment below to auto-trigger deploy
-            /*
-            await github.rest.actions.createWorkflowDispatch({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              workflow_id: 'deploy.yml',
-              ref: 'main'
-            });
-            console.log('Deploy workflow triggered');
-            */
-            console.log('Content synced. Deploy will trigger on next push to main.');
+          token: ${{ secrets.GITHUB_TOKEN }}
+          commit-message: ${{ steps.sync.outputs.commit_message }}
+          branch: ${{ steps.sync.outputs.pr_branch }}
+          delete-branch: true
+          title: ${{ steps.sync.outputs.pr_title }}
+          body: ${{ steps.sync.outputs.pr_body }}
+          labels: ${{ steps.sync.outputs.pr_labels }}
 
-      - name: Summary
-        run: |
-          echo "## Content Sync Summary" >> $GITHUB_STEP_SUMMARY
-          echo "" >> $GITHUB_STEP_SUMMARY
-          
-          if [ "${{ inputs.dry_run }}" = "true" ]; then
-            echo "🔍 **Dry Run Mode** - No changes committed" >> $GITHUB_STEP_SUMMARY
-          elif [ "${{ steps.sync.outputs.has_changes }}" = "true" ]; then
-            echo "✅ **Content Updated** - Changes committed and pushed" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "ℹ️ **No Changes** - Content is already up to date" >> $GITHUB_STEP_SUMMARY
-          fi
-          
-          echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Configuration" >> $GITHUB_STEP_SUMMARY
-          echo "- **Source:** ${{ inputs.source || 'all' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Topic:** ${{ inputs.topic || 'all' }}" >> $GITHUB_STEP_SUMMARY
-          echo "- **Trigger:** ${{ github.event_name }}" >> $GITHUB_STEP_SUMMARY
+      - name: Enable auto-merge
+        if: steps.sync.outputs.has_changes == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: gh pr merge ${{ steps.sync.outputs.pr_branch }} --auto --squash

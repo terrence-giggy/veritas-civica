@@ -30,6 +30,19 @@ import {
 } from './index.js';
 import { ContentStorage } from './storage/storage.js';
 import { hasToken } from './integrations/github/index.js';
+import {
+  isCI,
+  isGitHubActions,
+  writeGitHubOutput,
+  writeGitHubSummary,
+  configureGit,
+  stageContent,
+  hasChanges,
+  getChangesSummary,
+  getCIContext,
+  generatePRMetadata,
+  generateSummary,
+} from './ci/index.js';
 
 // =============================================================================
 // CLI Argument Parsing
@@ -133,6 +146,7 @@ ${colors.bold}Usage:${colors.reset}
 
 ${colors.bold}Commands:${colors.reset}
   sync              Sync content from configured sources
+  ci-sync           Sync content in CI mode (GitHub Actions)
   list-sources      Show configured sources and their status
   show <cat> <slug> Display retrieved content
   list [category]   List synced content
@@ -149,6 +163,7 @@ ${colors.bold}Examples:${colors.reset}
   npx tsx pipeline/cli.ts sync --dry-run
   npx tsx pipeline/cli.ts sync --source speculum-principum
   npx tsx pipeline/cli.ts sync --topic People
+  npx tsx pipeline/cli.ts ci-sync
   npx tsx pipeline/cli.ts list-sources
   npx tsx pipeline/cli.ts show people niccolo-machiavelli
 
@@ -379,6 +394,215 @@ async function sync(args: CliArgs): Promise<void> {
   }
 }
 
+/**
+ * CI-specific sync command for GitHub Actions
+ * 
+ * This command:
+ * 1. Runs the content sync
+ * 2. Configures git and stages changes
+ * 3. Outputs GitHub Actions variables (has_changes, pr metadata)
+ * 4. Writes a summary to GITHUB_STEP_SUMMARY
+ */
+async function ciSync(args: CliArgs): Promise<void> {
+  const startTime = Date.now();
+  const storage = new ContentStorage();
+  
+  // Determine sources to sync
+  const sourcesToSync = args.source 
+    ? [getSourceByName(args.source)].filter((s): s is SourceConfig => s !== undefined)
+    : getEnabledSources();
+
+  if (sourcesToSync.length === 0) {
+    error('No sources to sync');
+    if (args.source) {
+      error(`Source "${args.source}" not found`);
+      log(`\nAvailable sources: ${sources.map(s => s.name).join(', ')}`);
+    }
+    writeGitHubOutput('has_changes', 'false');
+    process.exit(1);
+  }
+
+  // Check for GitHub token
+  if (!hasToken()) {
+    error('GitHub token not found');
+    log('\nPlease set GITHUB_TOKEN or GH_TOKEN environment variable.');
+    writeGitHubOutput('has_changes', 'false');
+    process.exit(1);
+  }
+
+  log(`\n${colors.bold}🔄 Content Sync (CI Mode)${colors.reset}`);
+  log('─'.repeat(50));
+  
+  if (args.dryRun) {
+    warn('DRY RUN - no files will be written\n');
+  }
+
+  const results: SyncResult[] = [];
+
+  // Run sync for each source
+  for (const source of sourcesToSync) {
+    const sourceStartTime = Date.now();
+    log(`\n${colors.cyan}📦 ${source.name}${colors.reset}`);
+    
+    try {
+      const retriever = getRetriever(source);
+      
+      const topics = args.topic
+        ? source.topics.filter(t => t.category.toLowerCase() === args.topic?.toLowerCase())
+        : source.topics;
+
+      if (topics.length === 0) {
+        warn(`No matching topics for "${args.topic}"`);
+        continue;
+      }
+
+      const allContent: RawContent[] = [];
+      
+      for (const topic of topics) {
+        log(`   ${colors.blue}📁 ${topic.category}${colors.reset}`);
+        const result = await retriever.retrieve(source, topic);
+        
+        if (result.errors.length > 0) {
+          for (const err of result.errors) {
+            warn(`   ${err}`);
+          }
+        }
+        
+        log(`      Retrieved: ${result.count} items (${formatDuration(result.duration)})`);
+        allContent.push(...result.items);
+      }
+
+      if (allContent.length > 0) {
+        const syncResult = await storage.syncContent(allContent, args.dryRun);
+        
+        if (!args.dryRun) {
+          const checksums: Record<string, string> = {};
+          for (const content of allContent) {
+            checksums[content.slug] = content.checksum;
+          }
+          
+          await storage.updateSourceSyncState(source.name, {
+            lastSync: new Date().toISOString(),
+            checksums,
+            lastSyncCount: allContent.length,
+          });
+        }
+
+        results.push({
+          source: source.name,
+          success: syncResult.errors.length === 0,
+          created: syncResult.created,
+          updated: syncResult.updated,
+          unchanged: syncResult.unchanged,
+          errors: syncResult.errors,
+          duration: Date.now() - sourceStartTime,
+          syncedAt: new Date().toISOString(),
+        });
+        
+        success(`   Sync complete: ${syncResult.created.length} created, ${syncResult.updated.length} updated`);
+      } else {
+        results.push({
+          source: source.name,
+          success: true,
+          created: [],
+          updated: [],
+          unchanged: [],
+          errors: [],
+          duration: Date.now() - sourceStartTime,
+          syncedAt: new Date().toISOString(),
+        });
+        info('   No content retrieved');
+      }
+
+    } catch (err) {
+      const message = err instanceof Error ? err.message : String(err);
+      error(`   Sync failed: ${message}`);
+      results.push({
+        source: source.name,
+        success: false,
+        created: [],
+        updated: [],
+        unchanged: [],
+        errors: [{ slug: '', title: '', category: '', status: 'error', error: message }],
+        duration: Date.now() - sourceStartTime,
+        syncedAt: new Date().toISOString(),
+      });
+    }
+  }
+
+  // Check for changes and handle git operations
+  log('\n' + '─'.repeat(50));
+  log(`${colors.bold}CI Operations${colors.reset}`);
+  
+  const contentHasChanges = !args.dryRun && hasChanges('content/');
+  
+  if (contentHasChanges) {
+    success('Content changes detected');
+    
+    // Configure git and stage changes
+    log('   Configuring git...');
+    configureGit();
+    
+    log('   Staging content changes...');
+    stageContent('content/');
+    
+    const changesSummary = getChangesSummary('content/');
+    if (changesSummary) {
+      log(`\n${colors.dim}${changesSummary}${colors.reset}`);
+    }
+  } else {
+    info('No content changes detected');
+  }
+  
+  // Generate CI context and PR metadata
+  const context = getCIContext({ source: args.source, topic: args.topic });
+  const prMetadata = generatePRMetadata(results, context);
+  
+  // Write GitHub Actions outputs
+  log('\n' + '─'.repeat(50));
+  log(`${colors.bold}GitHub Actions Outputs${colors.reset}`);
+  
+  writeGitHubOutput('has_changes', String(contentHasChanges));
+  writeGitHubOutput('pr_title', prMetadata.title);
+  writeGitHubOutput('pr_body', prMetadata.body);
+  writeGitHubOutput('commit_message', prMetadata.commitMessage);
+  writeGitHubOutput('pr_branch', prMetadata.branch);
+  writeGitHubOutput('pr_labels', prMetadata.labels.join(','));
+  
+  success(`   has_changes: ${contentHasChanges}`);
+  success(`   pr_branch: ${prMetadata.branch}`);
+  
+  // Write GitHub Actions summary
+  const summary = generateSummary({
+    dryRun: args.dryRun,
+    hasChanges: contentHasChanges,
+    source: args.source,
+    topic: args.topic,
+    trigger: context.trigger,
+    results,
+  });
+  
+  writeGitHubSummary(summary);
+  success('   Summary written to GITHUB_STEP_SUMMARY');
+  
+  // Final summary
+  log('\n' + '─'.repeat(50));
+  const totalCreated = results.reduce((sum, r) => sum + r.created.length, 0);
+  const totalUpdated = results.reduce((sum, r) => sum + r.updated.length, 0);
+  const successfulSources = results.filter(r => r.success).length;
+  
+  log(`${colors.bold}Summary${colors.reset}`);
+  log(`  Sources: ${successfulSources}/${results.length} successful`);
+  log(`  Created: ${totalCreated}, Updated: ${totalUpdated}`);
+  log(`  Duration: ${formatDuration(Date.now() - startTime)}`);
+  log('');
+  
+  // Exit with error if any source failed
+  if (results.some(r => !r.success)) {
+    process.exit(1);
+  }
+}
+
 async function show(args: CliArgs): Promise<void> {
   const [category, slug] = args.args;
   
@@ -479,6 +703,9 @@ async function main(): Promise<void> {
   switch (args.command) {
     case 'sync':
       await sync(args);
+      break;
+    case 'ci-sync':
+      await ciSync(args);
       break;
     case 'list-sources':
     case 'sources':
