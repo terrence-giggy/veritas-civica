@@ -6,7 +6,7 @@
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import * as fs from 'node:fs/promises';
-import type { RawContent } from '../../../src/lib/content/types.js';
+import type { RawContent } from '../../../pipeline/types.js';
 
 // Mock fs/promises
 vi.mock('node:fs/promises', () => ({

@@ -1,55 +1,10 @@
 /**
- * Content Retrieval System - Module Exports
+ * Content Module for SvelteKit
  * 
- * Central export point for the content retrieval system.
+ * Provides content loading utilities for SvelteKit routes.
+ * The actual content pipeline (retrieval, storage, sync) lives in the /pipeline directory.
+ * This module re-exports only what's needed for build-time page generation.
  */
-
-// Type exports
-export type {
-  SourceConfig,
-  TopicConfig,
-  RawContent,
-  SourceSyncState,
-  SyncState,
-  SyncItemResult,
-  SyncResult,
-} from './types.js';
-
-// Configuration exports
-export {
-  speculumPrincipum,
-  sources,
-  getEnabledSources,
-  getSourceByName,
-  getAllCategories,
-  validateSourceConfig,
-} from './config.js';
-
-// Retriever exports
-export type { ContentRetriever, RetrievalResult } from './retrievers/index.js';
-export {
-  BaseRetriever,
-  generateSlug,
-  generateChecksum,
-  generateSHA256Checksum,
-  GitHubDiscussionsRetriever,
-  githubDiscussionsRetriever,
-  getRetriever,
-  getRetrieverByType,
-  getAvailableRetrieverTypes,
-  registerRetriever,
-} from './retrievers/index.js';
-
-// Storage exports
-export {
-  ContentStorage,
-  contentStorage,
-  writeContent,
-  readContent,
-  listContent,
-  getSyncState,
-  updateSyncState,
-} from './storage.js';
 
 // Loader exports (for SvelteKit routes)
 export type {
@@ -63,3 +18,8 @@ export {
   hasContent,
   getContentCount,
 } from './loader.js';
+
+// Re-export types from pipeline for convenience
+export type {
+  RawContent,
+} from '../../../pipeline/types.js';
