@@ -1,7 +1,10 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import Typography from '$lib/components/ui/Typography.svelte';
 	import Article from '$lib/components/ui/Article.svelte';
 	import Button from '$lib/components/ui/Button.svelte';
+	import AttributeDisplay from '$lib/components/ui/AttributeDisplay.svelte';
+	import { renderMarkdown } from '$lib/utils/markdown';
 	
 	let { data } = $props();
 	
@@ -19,6 +22,9 @@
 		const words = text.split(/\s+/).length;
 		return Math.max(1, Math.ceil(words / 200));
 	}
+	
+	// Render markdown content
+	const renderedContent = $derived(renderMarkdown(data.person.body));
 </script>
 
 <svelte:head>
@@ -29,9 +35,9 @@
 <!-- Breadcrumb -->
 <nav class="max-w-content mx-auto px-6 pt-8">
 	<div class="flex items-center gap-2 text-sm" style="color: hsl(var(--text-tertiary))">
-		<a href="/" class="hover:text-primary transition-colors">Home</a>
+		<a href="{base}/" class="hover:text-primary transition-colors">Home</a>
 		<span>/</span>
-		<a href="/people" class="hover:text-primary transition-colors">People</a>
+		<a href="{base}/people" class="hover:text-primary transition-colors">People</a>
 		<span>/</span>
 		<span style="color: hsl(var(--text-secondary))">{data.person.title}</span>
 	</div>
@@ -39,32 +45,18 @@
 
 <Article
 	title={data.person.title}
-	subtitle="From {data.person.source}"
+	subtitle={data.person.role ? data.person.role : `From ${data.person.source}`}
 	author="Speculum Principum"
 	publishDate={formatDate(data.person.updatedAt)}
 	readTime={calculateReadTime(data.person.body).toString()}
 >
-	<!-- Render markdown body as plain text for now -->
-	<!-- TODO: Add markdown parser for rich content -->
-	{#each data.person.body.split('\n\n') as paragraph}
-		{#if paragraph.startsWith('# ')}
-			<Typography as="h2" variant="h2">
-				{paragraph.slice(2)}
-			</Typography>
-		{:else if paragraph.startsWith('## ')}
-			<Typography as="h3" variant="h3">
-				{paragraph.slice(3)}
-			</Typography>
-		{:else if paragraph.startsWith('### ')}
-			<Typography as="h4" variant="h4">
-				{paragraph.slice(4)}
-			</Typography>
-		{:else if paragraph.trim()}
-			<Typography as="p" variant="body">
-				{paragraph}
-			</Typography>
-		{/if}
-	{/each}
+	<!-- Attribute Display - Type, Confidence, Key Attributes -->
+	<AttributeDisplay parsedAttributes={data.person.parsedAttributes} class="mb-8" />
+	
+	<!-- Render markdown content with prose styling -->
+	<div class="prose">
+		{@html renderedContent}
+	</div>
 	
 	<!-- Source Attribution -->
 	<div class="mt-12 p-6 bg-muted/50 rounded-lg border" style="border-color: hsl(var(--border))">
@@ -104,7 +96,7 @@
 <!-- Navigation -->
 <div class="max-w-content mx-auto px-6 pb-12">
 	<div class="flex gap-4">
-		<Button variant="outline" href="/people">← All People</Button>
-		<Button variant="ghost" href="/">Home</Button>
+		<Button variant="outline" href="{base}/people">← All People</Button>
+		<Button variant="ghost" href="{base}/">Home</Button>
 	</div>
 </div>

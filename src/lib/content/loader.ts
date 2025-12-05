@@ -11,6 +11,7 @@
 import { readFile, readdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import type { RawContent } from '../../../pipeline/types.js';
+import { parseAttributes, type ParsedAttributes } from '../utils/attributes.js';
 
 // =============================================================================
 // Constants
@@ -41,6 +42,10 @@ export interface ContentSummary {
   discussionUrl: string;
   /** Preview of content (first 200 chars) */
   excerpt: string;
+  /** Role or primary attribute for display */
+  role?: string;
+  /** Confidence percentage */
+  confidence?: number;
 }
 
 /**
@@ -53,6 +58,8 @@ export interface ContentDetail extends ContentSummary {
   retrievedAt: string;
   /** Discussion number for reference */
   discussionNumber: number;
+  /** Parsed attributes from content body */
+  parsedAttributes: ParsedAttributes;
 }
 
 // =============================================================================
@@ -95,6 +102,7 @@ function extractExcerpt(body: string, maxLength: number = 200): string {
  * Convert RawContent to ContentSummary
  */
 function toContentSummary(content: RawContent): ContentSummary {
+  const parsed = parseAttributes(content.body);
   return {
     slug: content.slug,
     title: content.title,
@@ -103,6 +111,8 @@ function toContentSummary(content: RawContent): ContentSummary {
     updatedAt: content.updatedAt,
     discussionUrl: content.discussionUrl,
     excerpt: extractExcerpt(content.body),
+    role: parsed.attributes.role,
+    confidence: parsed.confidence,
   };
 }
 
@@ -110,6 +120,7 @@ function toContentSummary(content: RawContent): ContentSummary {
  * Convert RawContent to ContentDetail
  */
 function toContentDetail(content: RawContent): ContentDetail {
+  const parsed = parseAttributes(content.body);
   return {
     slug: content.slug,
     title: content.title,
@@ -121,6 +132,9 @@ function toContentDetail(content: RawContent): ContentDetail {
     body: content.body,
     retrievedAt: content.retrievedAt,
     discussionNumber: content.discussionNumber,
+    role: parsed.attributes.role,
+    confidence: parsed.confidence,
+    parsedAttributes: parsed,
   };
 }
 

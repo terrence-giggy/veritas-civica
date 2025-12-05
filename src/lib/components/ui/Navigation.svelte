@@ -1,5 +1,6 @@
 <script>
 	import { cn } from "$lib/utils.js";
+	import { base } from '$app/paths';
 	import { Search, Bell, User } from 'lucide-svelte';
 	import Button from './Button.svelte';
 	import ThemeToggle from './ThemeToggle.svelte';
@@ -18,16 +19,16 @@
 		<div class="flex items-center justify-between h-16">
 			<!-- Logo / Brand -->
 			<div class="flex items-center gap-8">
-				<a href="/" class="text-xl font-bold font-serif hover:text-primary transition-colors" style="color: hsl(var(--text-primary))">
+				<a href="{base}/" class="text-xl font-bold font-serif hover:text-primary transition-colors" style="color: hsl(var(--text-primary))">
 					Veritas Civica
 				</a>
 				
 				<!-- Main Navigation Links -->
 				<div class="hidden md:flex items-center gap-6">
-					<a href="/people" class="text-sm font-medium hover:text-primary transition-colors" style="color: hsl(var(--text-secondary))">
+					<a href="{base}/people" class="text-sm font-medium hover:text-primary transition-colors" style="color: hsl(var(--text-secondary))">
 						People
 					</a>
-					<a href="/organizations" class="text-sm font-medium hover:text-primary transition-colors" style="color: hsl(var(--text-secondary))">
+					<a href="{base}/organizations" class="text-sm font-medium hover:text-primary transition-colors" style="color: hsl(var(--text-secondary))">
 						Organizations
 					</a>
 				</div>
