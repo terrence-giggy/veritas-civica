@@ -1,0 +1,13 @@
+{
+  "source": "speculum-principum",
+  "sourceType": "github-discussions",
+  "category": "People",
+  "title": "Louis XII",
+  "slug": "louis-xii",
+  "discussionNumber": 180,
+  "discussionUrl": "https://github.com/terrence-giggy/speculum-principum/discussions/180",
+  "retrievedAt": "2025-12-04T04:45:57.545Z",
+  "updatedAt": "2025-11-27T22:46:40Z",
+  "checksum": "85baae38a3879f45845588cb0d98690852eb55e5b1cf21ababfc58967663db53",
+  "body": "# Louis XII\n\n**Type:** Person\n**Confidence:** 82%\n\n## Summary\n\nA king of France mentioned in the context of losing Milan. King of France whose actions in Italy are critiqued for failing to maintain power and alliances. Louis XII is mentioned in the context of military organization and the consequences of relying on foreign troops.\n\n## Attributes\n\n| Attribute | Value |\n|-----------|-------|\n| context | Lost Milan due to the discontent of the inhabitants. |\n| notable_action | Abolished infantry and began to hire Swiss troops |\n| notable_actions | Invited into Italy by the Venetians, made strategic mistakes in maintaining power |\n| reign | 1498-1515 |\n| role | King of France |\n\n## Source Mentions\n\n> Louis XII of France, though able to occupy Milan without trouble, immediately lost it.\n> King Louis was called into Italy by the ambition of the Venetians\n> he had made the first mistake, he was obliged to follow it up\n> Louis lost Lombardy through not observing any of those conditions\n> Charles VII, father of King Louis XI, having through good fortune and bravery liberated France from the English, recognised this necessity of being armed with his own forces.\n\n_...and 1 more mentions._\n\n## Source Documents\n\n- `1327a866df4a...`\n\n---\n_Generated from knowledge graph on 2025-11-27 22:46 UTC_"
+}
