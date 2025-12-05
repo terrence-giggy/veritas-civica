@@ -1,4 +1,5 @@
 <script lang="ts">
+	import { base } from '$app/paths';
 	import Typography from '$lib/components/ui/Typography.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 	import CardHeader from '$lib/components/ui/CardHeader.svelte';
@@ -35,12 +36,24 @@
 		{#if data.people.length > 0}
 			<div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
 				{#each data.people as person}
-					<a href="/people/{person.slug}" class="block group">
+					<a href="{base}/people/{person.slug}" class="block group">
 						<Card class="h-full hover:shadow-lg transition-all duration-300">
 							<CardHeader>
-								<CardTitle class="group-hover:text-primary transition-colors">
-									{person.title}
-								</CardTitle>
+								<div class="flex items-start justify-between gap-2">
+									<CardTitle class="group-hover:text-primary transition-colors">
+										{person.title}
+									</CardTitle>
+									{#if person.confidence !== undefined}
+										<span class="shrink-0 text-xs px-2 py-0.5 rounded-full {person.confidence >= 90 ? 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' : person.confidence >= 70 ? 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' : 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400'}">
+											{person.confidence}%
+										</span>
+									{/if}
+								</div>
+								{#if person.role}
+									<span class="inline-block mt-1 text-xs px-2 py-0.5 rounded-full bg-primary/10 text-primary">
+										{person.role}
+									</span>
+								{/if}
 							</CardHeader>
 							<CardContent>
 								<Typography as="p" variant="body" class="line-clamp-3 mb-4 !text-sm" style="color: hsl(var(--text-secondary))">
@@ -75,7 +88,7 @@
 		
 		<!-- Back Link -->
 		<div class="mt-12 text-center">
-			<Button variant="outline" href="/">← Back to Home</Button>
+			<Button variant="outline" href="{base}/">← Back to Home</Button>
 		</div>
 	</div>
 </section>

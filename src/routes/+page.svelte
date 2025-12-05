@@ -1,4 +1,5 @@
 <script>
+	import { base } from '$app/paths';
 	import Button from '$lib/components/ui/Button.svelte';
 	import Card from '$lib/components/ui/Card.svelte';
 	import CardHeader from '$lib/components/ui/CardHeader.svelte';
@@ -6,6 +7,23 @@
 	import CardContent from '$lib/components/ui/CardContent.svelte';
 	import Typography from '$lib/components/ui/Typography.svelte';
 	import Article from '$lib/components/ui/Article.svelte';
+	
+	let { data } = $props();
+	
+	// Calculate approximate read time (200 words per minute)
+	function calculateReadTime(text) {
+		if (!text) return 1;
+		const words = text.split(/\s+/).length;
+		return Math.max(1, Math.ceil(words / 200));
+	}
+	
+	// Format date for display
+	function formatDate(isoDate) {
+		return new Date(isoDate).toLocaleDateString('en-US', {
+			month: 'short',
+			day: 'numeric'
+		});
+	}
 </script>
 
 <svelte:head>
@@ -19,87 +37,64 @@
 			Welcome to Veritas Civica
 		</Typography>
 		<Typography as="p" variant="lead" class="mb-8 max-w-2xl mx-auto">
-			A modern, typography-focused publishing platform inspired by the best reading experiences on the web. Built with Svelte, designed for readers and writers.
+			Exploring historical figures and organizations through the lens of classical political philosophy. 
+			{#if data.peopleCount > 0}
+				Currently documenting {data.peopleCount} {data.peopleCount === 1 ? 'person' : 'people'}{#if data.organizationsCount > 0} and {data.organizationsCount} {data.organizationsCount === 1 ? 'organization' : 'organizations'}{/if}.
+			{/if}
 		</Typography>
 		
 		<div class="flex gap-4 justify-center flex-wrap">
-			<Button variant="default" size="lg" class="font-medium">Start Reading</Button>
-			<Button variant="outline" size="lg" class="font-medium">Write Your Story</Button>
+			<Button variant="default" size="lg" class="font-medium" href="{base}/people">Explore People</Button>
+			<Button variant="outline" size="lg" class="font-medium" href="{base}/organizations">View Organizations</Button>
 		</div>
 	</div>
 </section>
 
-<!-- Featured Article Section -->
+<!-- Featured People Section -->
 <section class="py-12 bg-muted/30">
 	<div class="max-w-6xl mx-auto px-6">
 		<Typography as="h2" variant="h2" class="text-center mb-12">
-			Featured Stories
+			Featured People
 		</Typography>
 		
-		<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-			<Card class="group hover:shadow-lg transition-all duration-300 cursor-pointer">
-				<div class="aspect-video bg-muted rounded-t-lg mb-4"></div>
-				<CardHeader>
-					<CardTitle class="group-hover:text-primary transition-colors line-clamp-2">
-						The Future of Typography in Digital Publishing
-					</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<Typography as="p" variant="body" class="line-clamp-3 mb-4" style="color: hsl(var(--text-secondary))">
-						Exploring how modern web technologies are reshaping the way we read and write online, with a focus on accessibility and readability.
-					</Typography>
-					<div class="flex items-center gap-3 text-sm" style="color: hsl(var(--text-tertiary))">
-						<span>Jane Smith</span>
-						<span>·</span>
-						<span>5 min read</span>
-						<span>·</span>
-						<span>Dec 15</span>
-					</div>
-				</CardContent>
-			</Card>
-
-			<Card class="group hover:shadow-lg transition-all duration-300 cursor-pointer">
-				<div class="aspect-video bg-muted rounded-t-lg mb-4"></div>
-				<CardHeader>
-					<CardTitle class="group-hover:text-primary transition-colors line-clamp-2">
-						Building Accessible Web Components
-					</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<Typography as="p" variant="body" class="line-clamp-3 mb-4" style="color: hsl(var(--text-secondary))">
-						A comprehensive guide to creating inclusive user interfaces that work for everyone, following WCAG guidelines and best practices.
-					</Typography>
-					<div class="flex items-center gap-3 text-sm" style="color: hsl(var(--text-tertiary))">
-						<span>Alex Johnson</span>
-						<span>·</span>
-						<span>7 min read</span>
-						<span>·</span>
-						<span>Dec 12</span>
-					</div>
-				</CardContent>
-			</Card>
-
-			<Card class="group hover:shadow-lg transition-all duration-300 cursor-pointer">
-				<div class="aspect-video bg-muted rounded-t-lg mb-4"></div>
-				<CardHeader>
-					<CardTitle class="group-hover:text-primary transition-colors line-clamp-2">
-						The Art of Minimalist Design
-					</CardTitle>
-				</CardHeader>
-				<CardContent>
-					<Typography as="p" variant="body" class="line-clamp-3 mb-4" style="color: hsl(var(--text-secondary))">
-						Why less is more in modern web design, and how to create beautiful, functional interfaces with minimal visual clutter.
-					</Typography>
-					<div class="flex items-center gap-3 text-sm" style="color: hsl(var(--text-tertiary))">
-						<span>Maria Garcia</span>
-						<span>·</span>
-						<span>4 min read</span>
-						<span>·</span>
-						<span>Dec 10</span>
-					</div>
-				</CardContent>
-			</Card>
-		</div>
+		{#if data.featuredPeople.length > 0}
+			<div class="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+				{#each data.featuredPeople as person}
+					<a href="{base}/people/{person.slug}" class="block group">
+						<Card class="h-full hover:shadow-lg transition-all duration-300">
+							<div class="aspect-video bg-muted rounded-t-lg mb-4 flex items-center justify-center">
+								<span class="text-4xl">👤</span>
+							</div>
+							<CardHeader>
+								<CardTitle class="group-hover:text-primary transition-colors line-clamp-2">
+									{person.title}
+								</CardTitle>
+							</CardHeader>
+							<CardContent>
+								<Typography as="p" variant="body" class="line-clamp-3 mb-4" style="color: hsl(var(--text-secondary))">
+									{person.excerpt}
+								</Typography>
+								<div class="flex items-center gap-3 text-sm" style="color: hsl(var(--text-tertiary))">
+									<span>{person.source}</span>
+									<span>·</span>
+									<span>{formatDate(person.updatedAt)}</span>
+								</div>
+							</CardContent>
+						</Card>
+					</a>
+				{/each}
+			</div>
+			
+			<div class="text-center mt-8">
+				<Button variant="outline" href="{base}/people">View All People →</Button>
+			</div>
+		{:else}
+			<div class="text-center py-8">
+				<Typography as="p" variant="body" style="color: hsl(var(--text-secondary))">
+					No content yet. Run <code class="px-2 py-1 bg-muted rounded text-sm font-mono">npm run sync</code> to fetch content.
+				</Typography>
+			</div>
+		{/if}
 	</div>
 </section>
 
