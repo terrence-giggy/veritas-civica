@@ -1,6 +1,6 @@
 # Veritas Civica
 
-https://terrence-giggy.github.io/veritas-civica/
+https://specula-principum.github.io/veritas-civica/
 
 A modern Svelte-based static website built with SvelteKit and styled with Shadcn Svelte components.
 
